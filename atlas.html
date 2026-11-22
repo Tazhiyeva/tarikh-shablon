@@ -85,12 +85,12 @@ header.top a{color:var(--accent);font-weight:500;text-decoration:none;min-height
 .m-kz{fill:none;stroke:var(--kz);stroke-width:2;stroke-dasharray:9 6}
 .m-state{stroke-width:2.4;stroke-linejoin:round;transition:opacity .2s}
 .m-state.nb{fill:var(--nb);fill-opacity:.12;stroke:var(--nb);stroke-dasharray:7 5}
-.m-sname{font:700 30px var(--body);paint-order:stroke;stroke:var(--land);stroke-width:7;stroke-linejoin:round}
-.m-sname.nb{fill:var(--nb);font-weight:600;font-style:italic}
-.m-cap{font:700 26px var(--body);fill:var(--ink);paint-order:stroke;stroke:var(--land);stroke-width:6}
-.m-ev{font:600 25px var(--body);fill:var(--ink);paint-order:stroke;stroke:var(--land);stroke-width:6;stroke-linejoin:round}
+.m-sname{font:600 21px var(--body);paint-order:stroke;stroke:var(--land);stroke-width:5;stroke-linejoin:round;letter-spacing:.01em}
+.m-sname.nb{fill:var(--nb);font-weight:500;font-style:italic}
+.m-cap{font:600 19px var(--body);fill:var(--ink);paint-order:stroke;stroke:var(--land);stroke-width:4}
+.m-ev{font:500 18px var(--body);fill:var(--ink);paint-order:stroke;stroke:var(--land);stroke-width:4;stroke-linejoin:round}
 .m-ev tspan{fill:var(--ochre)}
-.m-route{fill:none;stroke:var(--route);stroke-width:4;stroke-dasharray:14 8;stroke-linecap:round}
+.m-route{fill:none;stroke:var(--route);stroke-width:3;stroke-dasharray:10 6;stroke-linecap:round}
 .ev-g.hl .hlring{display:block}
 .hlring{display:none;fill:none;stroke:var(--ochre);stroke-width:5}
 .sym-capital{fill:var(--ink);stroke:var(--surface);stroke-width:3}
@@ -216,29 +216,29 @@ function draw(){
   // labels placement
   const boxes=[],fits=b=>b.x>=2&&b.x+b.w<=W-2&&b.y>=2&&b.y+b.h<=H-2&&!boxes.some(q=>b.x<q.x+q.w&&q.x<b.x+b.w&&b.y<q.y+q.h&&q.y<b.y+b.h);
   const clamp=b=>({...b,x:Math.max(4,Math.min(W-b.w-4,b.x)),y:Math.max(4,Math.min(H-b.h-4,b.y))});
-  const tw=(t,fs)=>[...t].length*fs*.6;
+  const tw=(t,fs)=>[...t].length*fs*.58;
   const place=c=>{for(const b of c)if(fits(b)){boxes.push(b);return b}return null};
   boxes.push({x:0,y:0,w:230,h:60},{x:W-260,y:0,w:260,h:56}); // year badge + button
   let dyn="",txt="";
   // capitals
   const caps=[];for(const s of act){const c=pick(s.capitals,y);if(c)caps.push({...c,s})}
-  caps.forEach(c=>{c.px=X(c.lon);c.py=YY(c.lat);boxes.push({x:c.px-16,y:c.py-16,w:32,h:32})});
+  caps.forEach(c=>{c.px=X(c.lon);c.py=YY(c.lat);boxes.push({x:c.px-12,y:c.py-12,w:24,h:24})});
   // events
   const evs=eventsAt(y).slice(-14);
-  evs.forEach(e=>{if(e.lon!=null){e.px=X(e.lon);e.py=YY(e.lat);boxes.push({x:e.px-15,y:e.py-15,w:30,h:30})}});
+  evs.forEach(e=>{if(e.lon!=null){e.px=X(e.lon);e.py=YY(e.lat);boxes.push({x:e.px-11,y:e.py-11,w:22,h:22})}});
   for(const e of evs)if(e.route&&e.route.length>1)dyn+=`<path class="m-route" d="M${e.route.map(([a,b])=>X(a).toFixed(1)+" "+YY(b).toFixed(1)).join("L")}" marker-end="url(#ah)" opacity="${e.to>=y-win(y)/3?1:.55}"/>`;
   // state names
-  for(const l of labs){const fs=l.s.col==="nb"?27:31,t=nameAt(l.s,y),wd=tw(t,fs),h=fs+6;const c=[];for(const dy of[0,1,-1,2,-2])for(const dx of[0,-.6,.6])c.push(clamp({x:l.cx-wd/2+dx*wd,y:l.cy-h/2+dy*h,w:wd,h}));
+  for(const l of labs){const fs=l.s.col==="nb"?20:21,t=nameAt(l.s,y).replace(/\s*\(.*?\)/g,""),wd=tw(t,fs),h=fs+6;const c=[];for(const dy of[0,1,-1])for(const dx of[0,-.4,.4])c.push(clamp({x:l.cx-wd/2+dx*wd,y:l.cy-h/2+dy*h,w:wd,h}));
     const b=place(c);if(b)txt+=`<text class="m-sname ${l.s.col==="nb"?"nb":""}" x="${b.x.toFixed(0)}" y="${(b.y+fs).toFixed(0)}" ${l.s.col!=="nb"?`style="fill:var(--${l.s.col})"`:""}>${esc(t)}</text>`}
   // capitals symbols + names
-  for(const c of caps){dyn+=sym("capital",c.px,c.py,12);const fs=26,wd=tw(c.name,fs),h=fs+4;
-    const b=place([{x:c.px+18,y:c.py-h/2,w:wd,h},{x:c.px-18-wd,y:c.py-h/2,w:wd,h},{x:c.px-wd/2,y:c.py-22-h,w:wd,h},{x:c.px-wd/2,y:c.py+20,w:wd,h}]);
+  for(const c of caps){dyn+=sym("capital",c.px,c.py,9);const fs=19,wd=tw(c.name,fs),h=fs+4;
+    const b=place([{x:c.px+14,y:c.py-h/2,w:wd,h},{x:c.px-14-wd,y:c.py-h/2,w:wd,h},{x:c.px-wd/2,y:c.py-16-h,w:wd,h},{x:c.px-wd/2,y:c.py+14,w:wd,h}]);
     if(b)txt+=`<text class="m-cap" x="${b.x.toFixed(0)}" y="${(b.y+fs-3).toFixed(0)}">${esc(c.name)}</text>`}
   // events
   evs.forEach((e,i)=>{if(e.lon==null)return;const fresh=e.to>=y-win(y)/3;const op=fresh?1:.6;
-    dyn+=`<g class="ev-g${hlIdx===events.indexOf(e)?" hl":""}" opacity="${op}"><circle class="hlring" cx="${e.px}" cy="${e.py}" r="24"/>${sym(e.type,e.px,e.py,12)}</g>`;
-    const yr=e.from<0?"":` ${e.from}`,t=e.name,fs=25,wd=tw(t+yr,fs),h=fs+4,x=e.px,yy=e.py;
-    const b=place([{x:x+18,y:yy-h/2,w:wd,h},{x:x-18-wd,y:yy-h/2,w:wd,h},{x:x-wd/2,y:yy-22-h,w:wd,h},{x:x-wd/2,y:yy+20,w:wd,h},{x:x+14,y:yy-h-12,w:wd,h},{x:x+14,y:yy+12,w:wd,h},{x:x-14-wd,y:yy-h-12,w:wd,h},{x:x-14-wd,y:yy+12,w:wd,h}]);
+    dyn+=`<g class="ev-g${hlIdx===events.indexOf(e)?" hl":""}" opacity="${op}"><circle class="hlring" cx="${e.px}" cy="${e.py}" r="18"/>${sym(e.type,e.px,e.py,9)}</g>`;
+    const yr=e.from<0?"":` ${e.from}`,t=e.name,fs=18,wd=tw(t+yr,fs),h=fs+4,x=e.px,yy=e.py;
+    const b=place([{x:x+13,y:yy-h/2,w:wd,h},{x:x-13-wd,y:yy-h/2,w:wd,h},{x:x-wd/2,y:yy-15-h,w:wd,h},{x:x-wd/2,y:yy+14,w:wd,h},{x:x+10,y:yy-h-8,w:wd,h},{x:x+10,y:yy+8,w:wd,h},{x:x-10-wd,y:yy-h-8,w:wd,h},{x:x-10-wd,y:yy+8,w:wd,h}]);
     if(b)txt+=`<text class="m-ev" opacity="${op}" x="${b.x.toFixed(0)}" y="${(b.y+fs-3).toFixed(0)}">${esc(t)}${yr?`<tspan>${yr}</tspan>`:""}</text>`});
   $("#gdyn").innerHTML=dyn+txt;
   $("#ybadge").textContent=fmtY(y);

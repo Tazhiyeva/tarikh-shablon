@@ -34,6 +34,7 @@ button,a,summary,.chip{touch-action:manipulation}
 header.top{padding-block:28px 12px}
 header.top h1{font:700 clamp(28px,7vw,40px)/1.1 var(--display);margin:0;text-wrap:balance}
 header.top p{color:var(--muted);margin:8px 0 0;max-width:60ch}
+.atlaslink{display:inline-flex;align-items:center;min-height:44px;color:var(--accent);font-weight:600;text-decoration:none}
 
 nav.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
 nav.bar .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
@@ -162,6 +163,7 @@ footer{color:var(--muted);font-size:14px;padding-block:32px 40px}
 <header class="top"><div class="wrap">
   <h1>Қазақстан тарихы: 8 шаблон</h1>
   <p>120 емтихан сұрағы сегіз қалыпқа бөлінді. Бір шаблонды үйреніп алсаң, сол топтағы сұрақтардың бәріне жауаптың қаңқасы дайын болады.</p>
+  <p><a class="atlaslink" href="atlas.html">Уақыт картасы: палеолиттен бүгінге дейін слайдермен →</a></p>
 </div></header>
 
 <nav class="bar" aria-label="Бөлімдер"><div class="wrap">
@@ -170,6 +172,7 @@ footer{color:var(--muted);font-size:14px;padding-block:32px 40px}
   <a href="#verbs">Тапсырма сөздері</a>
   <a href="#unknown">Білмей қалсаң</a>
   <a href="#questions">120 сұрақ</a>
+  <a href="atlas.html" data-ext>Уақыт картасы ↗</a>
 </div></nav>
 
 <main class="wrap">
@@ -390,7 +393,7 @@ $("#list").addEventListener("click",e=>{const d=e.target.closest("dd");if(d&&doc
 $("#rand").addEventListener("click",()=>{const pool=CARDS.filter(c=>filt==="all"||c.t===filt);if(!pool.length)return;const c=pool[Math.floor(Math.random()*pool.length)];$("#q").value="";render();const d=document.getElementById("q"+c.n);if(d){d.open=true;d.scrollIntoView({block:"start"})}});
 
 // nav: direct scroll + active state
-document.querySelectorAll("nav.bar a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();const s=document.querySelector(a.getAttribute("href"));if(s)s.scrollIntoView()}));
+document.querySelectorAll("nav.bar a:not([data-ext])").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();const s=document.querySelector(a.getAttribute("href"));if(s)s.scrollIntoView()}));
 const links=[...document.querySelectorAll("nav.bar a")];
 const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)links.forEach(l=>l.classList.toggle("on",l.getAttribute("href")==="#"+en.target.id))})},{rootMargin:"-40% 0px -55% 0px"});
 document.querySelectorAll("main section").forEach(s=>io.observe(s));
